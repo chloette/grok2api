@@ -13,6 +13,13 @@ from app.platform.config.snapshot import get_config
 from app.control.proxy.models import ProxyLease
 
 
+def _normalize_proxy_url(proxy_url: str) -> str:
+    proxy_url = str(proxy_url or "").strip()
+    if proxy_url and "://" not in proxy_url:
+        return f"http://{proxy_url}"
+    return proxy_url
+
+
 def _ssl_ctx() -> ssl.SSLContext:
     ctx = ssl.create_default_context()
     ctx.load_verify_locations(certifi.where())
@@ -38,6 +45,7 @@ def _build_connector(
     proxy_url: str,
     ssl_ctx:   ssl.SSLContext,
 ) -> tuple[aiohttp.BaseConnector, str | None]:
+    proxy_url = _normalize_proxy_url(proxy_url)
     if not proxy_url:
         return aiohttp.TCPConnector(ssl=ssl_ctx), None
     scheme = urlparse(proxy_url).scheme.lower()

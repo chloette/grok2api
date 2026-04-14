@@ -46,11 +46,15 @@ _TOKEN_TRANS = str.maketrans({
     "\u200b": "", "\u200c": "", "\u200d": "", "\ufeff": "",
 })
 _STRIP_RE = re.compile(r"\s+")
+_JWT_LIKE_RE = re.compile(r"^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$")
 
 
 def _sanitize(value: str) -> str:
     tok = str(value or "").translate(_TOKEN_TRANS)
     tok = _STRIP_RE.sub("", tok)
+    parts = tok.split(":")
+    if len(parts) == 3 and "@" in parts[0] and _JWT_LIKE_RE.fullmatch(parts[2]):
+        tok = parts[2]
     if tok.startswith("sso="):
         tok = tok[4:]
     return tok.encode("ascii", errors="ignore").decode("ascii")

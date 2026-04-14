@@ -314,7 +314,7 @@
     "saveFailed": "Failed to save changes: {message}",
     "resetSuccess": "Unsaved changes discarded",
     "disabledTip": {
-      "appUrlRequired": "Configure the APP Base URL first"
+      "appUrlRequired": "Configure the APP Base URL for cross-device access"
     },
     "schema": {
       "tabs": {
@@ -417,11 +417,11 @@
         },
         "imageFormat": {
           "label": "Image Output Format",
-          "desc": "grok_url and grok_md return the native Grok CDN address directly. local_* modes download assets to the server first and re-expose them through the local proxy. base64 returns an inline Data URI."
+          "desc": "grok_url and grok_md return the native Grok CDN address directly. local_* modes download assets to the server first and re-expose them through the local proxy. Same-origin WebUI can use relative paths without APP Base URL; configure it only for cross-device access. base64 returns an inline Data URI."
         },
         "videoFormat": {
           "label": "Video Output Format",
-          "desc": "local_* modes download video assets to the server and deliver them through the local proxy. Configure the APP Base URL first and account for outbound bandwidth usage."
+          "desc": "local_* modes download video assets to the server and deliver them through the local proxy. Same-origin WebUI can use relative paths without APP Base URL; configure it for cross-device access and account for outbound bandwidth usage."
         },
         "basicInterval": {
           "label": "Basic Refresh Interval (s)",

@@ -2,11 +2,15 @@
 
 from dataclasses import dataclass
 from typing import Any
+import re
 
 from pydantic import BaseModel, Field, field_validator
 
 from app.platform.runtime.clock import now_ms
 from .enums import AccountStatus, QuotaSource
+
+
+_JWT_LIKE_RE = re.compile(r"^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$")
 
 
 # ---------------------------------------------------------------------------
@@ -228,6 +232,10 @@ class AccountRecord(BaseModel):
             )
         )
         token = "".join(token.split())
+        # Support supplier-style account lines: email:password:sso
+        parts = token.split(":")
+        if len(parts) == 3 and "@" in parts[0] and _JWT_LIKE_RE.fullmatch(parts[2]):
+            token = parts[2]
         if token.startswith("sso="):
             token = token[4:]
         token = token.encode("ascii", errors="ignore").decode("ascii")

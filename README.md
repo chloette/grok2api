@@ -121,7 +121,8 @@ docker compose up -d
 
 1. 修改 `app.app_key`
 2. 设置 `app.api_key`
-3. 设置 `app.app_url`（否则图片、视频的链接会 403 无权访问）
+3. 如需把图片、视频链接分享给其他设备或外网访问，再设置 `app.app_url`
+   同一台机器上的 WebUI / API 客户端可直接使用 `local_*` 媒体格式，返回相对路径，不要求必须配置 `app.app_url`
 
 <br>
 
@@ -139,6 +140,16 @@ docker compose up -d
 | Web Chat | `/webui/chat` |
 | Masonry | `/webui/masonry` |
 | ChatKit | `/webui/chatkit` |
+
+### WebUI 说明
+
+- 聊天页内联图片支持点击放大预览；点击遮罩空白处、右上角关闭按钮，或按 `Esc` 可退出预览
+- 若使用 `features.image_format = "local_url"` / `local_md`，同域访问场景会返回 `/v1/files/image?...` 相对路径；只有跨设备或外网分享时才需要配置 `app.app_url`
+
+### 账号导入格式
+
+- `/admin/account` 支持直接导入原始 `sso`，或 `sso=<value>`
+- 也支持供应商常见的三段式格式 `邮箱:密码:sso`，导入时会自动提取最后一段作为实际 `sso`
 
 ### 鉴权规则
 

@@ -23,7 +23,8 @@ async def mark_account_invalid_credentials(
     """Mark *token* as invalid when *exc* matches Grok invalid credentials."""
     from app.dataplane.reverse.protocol.xai_usage import is_invalid_credentials_error
 
-    if not is_invalid_credentials_error(exc):
+    status = getattr(exc, "status", None) if isinstance(exc, UpstreamError) else None
+    if status != 401 and not is_invalid_credentials_error(exc):
         return False
 
     record = next(iter(await repo.get_accounts([token])), None)

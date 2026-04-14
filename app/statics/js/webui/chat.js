@@ -27,6 +27,9 @@
   const sessionModalInput = document.getElementById('sessionModalInput');
   const sessionModalCancel = document.getElementById('sessionModalCancel');
   const sessionModalConfirm = document.getElementById('sessionModalConfirm');
+  const imageLightbox = document.getElementById('imageLightbox');
+  const imageLightboxImg = document.getElementById('imageLightboxImg');
+  const imageLightboxClose = document.getElementById('imageLightboxClose');
 
   let sessions = [];
   let currentSessionId = '';
@@ -51,6 +54,33 @@
 
   function toast(message, type = 'info') {
     if (typeof showToast === 'function') showToast(message, type);
+  }
+
+  function isPreviewableImageElement(node) {
+    return node instanceof HTMLImageElement
+      && !!node.src
+      && (
+        node.closest('.msg-inline-media')
+        || node.closest('.msg-user-gallery')
+        || node.closest('.msg-card-assistant')
+      );
+  }
+
+  function openImageLightbox(src, alt = 'preview') {
+    if (!imageLightbox || !imageLightboxImg || !src) return;
+    imageLightboxImg.src = src;
+    imageLightboxImg.alt = alt;
+    imageLightbox.hidden = false;
+    imageLightbox.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeImageLightbox() {
+    if (!imageLightbox || !imageLightboxImg) return;
+    imageLightbox.hidden = true;
+    imageLightbox.setAttribute('aria-hidden', 'true');
+    imageLightboxImg.removeAttribute('src');
+    document.body.style.overflow = '';
   }
 
   function formatModelOptionLabel(modelId, fallbackName) {
@@ -296,6 +326,8 @@
   function isImageUrl(value) {
     const normalized = String(value || '').trim().toLowerCase();
     return normalized.includes('/v1/files/image')
+      || normalized.includes('assets.grok.com') && normalized.includes('/content')
+      || normalized.includes('assets.grokusercontent.com') && normalized.includes('/content')
       || /\.(png|jpe?g|gif|webp|bmp|svg)(\?|#|$)/.test(normalized)
       || normalized.startsWith('data:image/');
   }
@@ -1616,6 +1648,16 @@
       toast(error.message || String(error), 'error');
     }
   });
+  thread?.addEventListener('click', (event) => {
+    const img = event.target;
+    if (!isPreviewableImageElement(img)) return;
+    event.preventDefault();
+    openImageLightbox(img.currentSrc || img.src, img.alt || 'preview');
+  });
+  imageLightboxClose?.addEventListener('click', closeImageLightbox);
+  imageLightbox?.addEventListener('click', (event) => {
+    if (event.target === imageLightbox) closeImageLightbox();
+  });
   sessionModalCancel.addEventListener('click', () => closeSessionModal(false));
   sessionModalConfirm.addEventListener('click', () => {
     const result = sessionModalInputWrap.hidden ? true : sessionModalInput.value;
@@ -1635,6 +1677,11 @@
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
       sendMessage();
+    }
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && imageLightbox && !imageLightbox.hidden) {
+      closeImageLightbox();
     }
   });
 

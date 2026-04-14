@@ -164,12 +164,12 @@ def _resolve_profile(lease: ProxyLease | None) -> tuple[str, str]:
 
     Field-level fallback: if the lease exists but a field is empty (e.g. no
     clearance bundle yet), the config default is used rather than returning an
-    empty string.  This prevents bare requests with no User-Agent when running
+    empty string. This prevents bare requests with no User-Agent when running
     in direct mode or when FlareSolverr has not yet delivered a bundle.
     """
     cfg = get_config()
     cfg_cookies = cfg.get_str("proxy.clearance.cf_cookies", "")
-    cfg_ua      = cfg.get_str("proxy.clearance.user_agent", "")
+    cfg_ua = cfg.get_str("proxy.clearance.user_agent", "")
     if lease is not None:
         return (lease.cf_cookies or cfg_cookies, lease.user_agent or cfg_ua)
     return (cfg_cookies, cfg_ua)

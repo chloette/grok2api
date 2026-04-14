@@ -80,6 +80,21 @@
     </div>
   </div>
 
+  <div id="imageLightbox" class="webui-lightbox" aria-hidden="true" hidden>
+    <button
+      id="imageLightboxClose"
+      class="webui-lightbox-close"
+      type="button"
+      aria-label="Close image preview"
+      title="Close"
+    >
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <img id="imageLightboxImg" class="webui-lightbox-image" alt="preview">
+  </div>
+
   <script src="/static/js/i18n.js?v={{APP_VERSION}}"></script>
   <script src="/static/js/auth.js?v={{APP_VERSION}}"></script>
   <script src="/static/js/toast.js?v={{APP_VERSION}}"></script>

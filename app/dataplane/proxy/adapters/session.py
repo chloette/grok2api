@@ -12,7 +12,6 @@ from app.control.proxy.models import ProxyLease
 
 def _resolve_browser(lease: ProxyLease | None) -> str:
     if lease is not None and lease.user_agent:
-        from urllib.parse import urlparse
         import re
         m = re.search(r"Chrome/(\d+)", lease.user_agent)
         return f"chrome{m.group(1)}" if m else "chrome120"
@@ -30,14 +29,18 @@ def normalize_proxy_url(url: str) -> str:
     """Normalize SOCKS schemes for consistent DNS-over-proxy behaviour."""
     if not url:
         return url
-    scheme = urlparse(url).scheme.lower()
+    normalized = url.strip()
+    if "://" not in normalized:
+        # Accept admin-entered host:port values and treat them as HTTP proxies.
+        normalized = f"http://{normalized}"
+    scheme = urlparse(normalized).scheme.lower()
     if scheme == "socks":
-        return "socks5h://" + url[len("socks://"):]
+        return "socks5h://" + normalized[len("socks://"):]
     if scheme == "socks5":
-        return "socks5h://" + url[len("socks5://"):]
+        return "socks5h://" + normalized[len("socks5://"):]
     if scheme == "socks4":
-        return "socks4a://" + url[len("socks4://"):]
-    return url
+        return "socks4a://" + normalized[len("socks4://"):]
+    return normalized
 
 
 def build_session_kwargs(

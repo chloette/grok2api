@@ -334,7 +334,7 @@ const SCHEMA_DEF = [
         title: '基础访问控制', titleKey: 'config.schema.groups.baseAccess',
         section: 'app',
         fields: [
-          { key: 'app_url', label: 'APP 访问地址', labelKey: 'config.schema.fields.appUrl.label', type: 'text', desc: '应用对外提供服务的根 URL，格式如 https://your-domain.com。本地代理模式必须配置。', descKey: 'config.schema.fields.appUrl.desc', wide: true },
+          { key: 'app_url', label: 'APP 访问地址', labelKey: 'config.schema.fields.appUrl.label', type: 'text', desc: '应用对外提供服务的根 URL，格式如 https://your-domain.com。若 WebUI 与 API 同域访问，可留空并返回相对路径；跨设备或外网访问本地代理资源时再配置。', descKey: 'config.schema.fields.appUrl.desc', wide: true },
           { key: 'app_key', label: 'APP 访问密码', labelKey: 'config.schema.fields.appKey.label', type: 'password', desc: '管理后台鉴权密码。修改后已有 Session 将立即失效，需重新登录。', descKey: 'config.schema.fields.appKey.desc', rand: true },
           { key: 'api_key', label: 'API 调用密钥', labelKey: 'config.schema.fields.apiKey.label', type: 'text', desc: 'OpenAI 兼容 API 的鉴权密钥。多个值请使用英文逗号分隔；留空则禁用鉴权。', descKey: 'config.schema.fields.apiKey.desc', rand: true },
           { key: 'webui_enabled', label: '启用 WebUI', labelKey: 'config.schema.fields.webuiEnabled.label', type: 'bool', desc: '开放 WebUI 功能入口。关闭后相关路由将返回 404。', descKey: 'config.schema.fields.webuiEnabled.desc' },
@@ -399,12 +399,12 @@ const SCHEMA_DEF = [
             type: 'select',
             options: [
               { value: 'grok_url', label: 'URL（Grok 原生）', labelKey: 'config.schema.options.imageFormat.grokUrl' },
-              { value: 'local_url', label: 'URL（本地代理）', labelKey: 'config.schema.options.imageFormat.localUrl', disabledWhen: 'no_app_url', disabledTip: '请先填写 APP 访问地址', disabledTipKey: 'config.disabledTip.appUrlRequired' },
+              { value: 'local_url', label: 'URL（本地代理）', labelKey: 'config.schema.options.imageFormat.localUrl' },
               { value: 'grok_md', label: 'Markdown（Grok 原生）', labelKey: 'config.schema.options.imageFormat.grokMarkdown' },
-              { value: 'local_md', label: 'Markdown（本地代理）', labelKey: 'config.schema.options.imageFormat.localMarkdown', disabledWhen: 'no_app_url', disabledTip: '请先填写 APP 访问地址', disabledTipKey: 'config.disabledTip.appUrlRequired' },
+              { value: 'local_md', label: 'Markdown（本地代理）', labelKey: 'config.schema.options.imageFormat.localMarkdown' },
               { value: 'base64', label: 'Base64（内嵌）', labelKey: 'config.schema.options.imageFormat.base64' },
             ],
-            desc: 'grok_url / grok_md 直接返回 Grok CDN 地址，客户端需具备 CDN 访问能力；local_* 模式会先下载到服务端，再通过本地 URL 代理分发；base64 会以内嵌 Data URI 返回。',
+            desc: 'grok_url / grok_md 直接返回 Grok CDN 地址，客户端需具备 CDN 访问能力；local_* 模式会先下载到服务端，再通过本地 URL 代理分发。同域 WebUI 可直接使用相对路径，不要求填写 APP 访问地址；跨设备访问时再配置。',
             descKey: 'config.schema.fields.imageFormat.desc',
           },
           {
@@ -414,11 +414,11 @@ const SCHEMA_DEF = [
             type: 'select',
             options: [
               { value: 'grok_url', label: 'URL（Grok 原生）', labelKey: 'config.schema.options.videoFormat.grokUrl' },
-              { value: 'local_url', label: 'URL（本地代理）', labelKey: 'config.schema.options.videoFormat.localUrl', disabledWhen: 'no_app_url', disabledTip: '请先填写 APP 访问地址', disabledTipKey: 'config.disabledTip.appUrlRequired' },
+              { value: 'local_url', label: 'URL（本地代理）', labelKey: 'config.schema.options.videoFormat.localUrl' },
               { value: 'grok_html', label: 'HTML（Grok 原生）', labelKey: 'config.schema.options.videoFormat.grokHtml' },
-              { value: 'local_html', label: 'HTML（本地代理）', labelKey: 'config.schema.options.videoFormat.localHtml', disabledWhen: 'no_app_url', disabledTip: '请先填写 APP 访问地址', disabledTipKey: 'config.disabledTip.appUrlRequired' },
+              { value: 'local_html', label: 'HTML（本地代理）', labelKey: 'config.schema.options.videoFormat.localHtml' },
             ],
-            desc: 'local_* 模式会先将视频下载至服务端，再通过本地 URL 代理分发；请确保已配置 APP 访问地址，并评估出站带宽消耗。',
+            desc: 'local_* 模式会先将视频下载至服务端，再通过本地 URL 代理分发。同域 WebUI 可直接使用相对路径；跨设备访问时请配置 APP 访问地址，并评估出站带宽消耗。',
             descKey: 'config.schema.fields.videoFormat.desc',
           },
         ]

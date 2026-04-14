@@ -314,7 +314,7 @@
     "saveFailed": "保存更改失败：{message}",
     "resetSuccess": "未保存的更改已撤销",
     "disabledTip": {
-      "appUrlRequired": "请先填写 APP 访问地址"
+      "appUrlRequired": "如需跨设备访问，请先填写 APP 访问地址"
     },
     "schema": {
       "tabs": {
@@ -417,11 +417,11 @@
         },
         "imageFormat": {
           "label": "图片返回格式",
-          "desc": "grok_url / grok_md 直接返回 Grok CDN 地址，客户端需具备 CDN 访问能力；local_* 模式会先下载到服务端，再通过本地 URL 代理分发；base64 会以内嵌 Data URI 返回。"
+          "desc": "grok_url / grok_md 直接返回 Grok CDN 地址，客户端需具备 CDN 访问能力；local_* 模式会先下载到服务端，再通过本地 URL 代理分发。同域 WebUI 可直接使用相对路径，不要求填写 APP 访问地址；跨设备访问时再配置。"
         },
         "videoFormat": {
           "label": "视频返回格式",
-          "desc": "local_* 模式会先将视频下载至服务端，再通过本地 URL 代理分发；请确保已配置 APP 访问地址，并评估出站带宽消耗。"
+          "desc": "local_* 模式会先将视频下载至服务端，再通过本地 URL 代理分发。同域 WebUI 可直接使用相对路径；跨设备访问时请配置 APP 访问地址，并评估出站带宽消耗。"
         },
         "basicInterval": {
           "label": "Basic 刷新周期（秒）",

@@ -313,6 +313,9 @@ def create_app() -> FastAPI:
     @app.middleware("http")
     async def _ensure_config(request: Request, call_next):
         await _config.load()
+        from app.control.proxy import get_proxy_directory
+        proxy_directory = await get_proxy_directory()
+        await proxy_directory.load()
         return await call_next(request)
 
     # Global exception handler — converts AppError to JSON.
